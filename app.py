@@ -60,12 +60,18 @@ class agentState(TypedDict):
 #----------------------------------
 # HERRAMIENTAS
 #----------------------------------
+DB_PATH ="psychology_system.db"
+
+def get_db_connection():
+    """Obtiene una conexión a la base de datos"""
+    return sqlite3.connect(DB_PATH)
+
 from datetime import datetime
 @tool
 def obtener_pregunta_por_id(pregunta_id: int) -> Optional[Dict[str, str]]:
     """Devuelve todos los campos de una pregunta dado su ID"""
     try:
-        DB_PATH = "/content/psychology_system.db"
+        DB_PATH = "psychology_system.db"
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
@@ -285,7 +291,7 @@ name="queries_agent"
 #----------------------------------
 
 # Configuración de la base de datos
-DB_PATH = "/content/psychology_system.db"
+DB_PATH = "psychology_system.db"
 
 def get_db_connection():
     """Obtiene una conexión a la base de datos"""
