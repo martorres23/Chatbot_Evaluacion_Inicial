@@ -1,0 +1,13 @@
+streamlit
+pyngrok
+
+langgraph
+langchain-core
+langchain
+langchain-google-genai
+google-generativeai
+
+python-dotenv
+typing-extensions
+ipython
+matplotlib
