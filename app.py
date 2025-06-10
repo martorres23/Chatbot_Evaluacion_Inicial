@@ -392,6 +392,10 @@ initial_state: agentState = {
 #  INICIALIZACIÓN DE LA SESIÓN
 #---------------------------------
 def init_session_state():
+    #####
+    if 'screen' not in st.session_state:
+        st.session_state.screen = "login"  # valores: 'login', 'register', 'chat'
+    #####
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
     if 'user_role' not in st.session_state:
@@ -406,50 +410,53 @@ def init_session_state():
 #----------------------------------
 # AUTENTICACIÓN
 #----------------------------------
-def show_auth_screen():
-    """Muestra la pantalla de autenticación"""
-    st.title("🧠 Sistema de Terapia Psicológica")
+def show_login_screen():
+    st.title("🔐 Iniciar Sesión")
+    with st.form("login_form"):
+        login_username = st.text_input("Usuario", key="login_user")
+        login_password = st.text_input("Contraseña", type="password", key="login_pass")
+        login_role = st.selectbox("Rol", ["paciente", "médico"], key="login_role")
+        login_btn = st.form_submit_button("Iniciar Sesión")
 
-    # Crear dos columnas para login y registro
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.header("📝 Registro")
-        with st.form("register_form"):
-            reg_username = st.text_input("Usuario", key="reg_user")
-            reg_password = st.text_input("Contraseña", type="password", key="reg_pass")
-            reg_role = st.selectbox("Rol", ["paciente", "médico"], key="reg_role")
-            register_btn = st.form_submit_button("Registrarse")
-
-            if register_btn:
-                if reg_username and reg_password:
-                    if register_user(reg_username, reg_password, reg_role):
-                        st.success("¡Usuario registrado exitosamente!")
-                    else:
-                        st.error("El usuario ya existe. Intenta con otro nombre.")
+        if login_btn:
+            if login_username and login_password:
+                if authenticate_user(login_username, login_password, login_role):
+                    st.session_state.authenticated = True
+                    st.session_state.user_role = login_role
+                    st.session_state.username = login_username
+                    st.success("¡Bienvenido!")
+                    st.rerun()
                 else:
-                    st.error("Por favor, completa todos los campos.")
+                    st.error("Credenciales incorrectas.")
+            else:
+                st.error("Por favor, completa todos los campos.")
+    
+    if st.button("¿No tienes cuenta? Regístrate"):
+        st.session_state.screen = "register"
+        st.rerun()
 
-    with col2:
-        st.header("🔐 Iniciar Sesión")
-        with st.form("login_form"):
-            login_username = st.text_input("Usuario", key="login_user")
-            login_password = st.text_input("Contraseña", type="password", key="login_pass")
-            login_role = st.selectbox("Rol", ["paciente", "médico"], key="login_role")
-            login_btn = st.form_submit_button("Iniciar Sesión")
+def show_register_screen():
+    st.title("📝 Registro de Usuario")
+    with st.form("register_form"):
+        reg_username = st.text_input("Usuario", key="reg_user")
+        reg_password = st.text_input("Contraseña", type="password", key="reg_pass")
+        reg_role = st.selectbox("Rol", ["paciente", "médico"], key="reg_role")
+        register_btn = st.form_submit_button("Registrarse")
 
-            if login_btn:
-                if login_username and login_password:
-                    if authenticate_user(login_username, login_password, login_role):
-                        st.session_state.authenticated = True
-                        st.session_state.user_role = login_role
-                        st.session_state.username = login_username
-                        st.success("¡Bienvenido!")
-                        st.rerun()
-                    else:
-                        st.error("Credenciales incorrectas.")
+        if register_btn:
+            if reg_username and reg_password:
+                if register_user(reg_username, reg_password, reg_role):
+                    st.success("¡Usuario registrado exitosamente!")
+                    st.session_state.screen = "login"
+                    st.rerun()
                 else:
-                    st.error("Por favor, completa todos los campos.")
+                    st.error("El usuario ya existe. Intenta con otro nombre.")
+            else:
+                st.error("Por favor, completa todos los campos.")
+    
+    if st.button("¿Ya tienes cuenta? Inicia sesión"):
+        st.session_state.screen = "login"
+        st.rerun()
 
 #----------------------------------
 # INTERFAZ DE CHAT
@@ -535,10 +542,19 @@ def main():
     init_session_state()
 
     # Mostrar interfaz según el estado de autenticación
+    #if not st.session_state.authenticated:
+    #    show_auth_screen()
+    #else:
+    #    show_chat_interface()
+
     if not st.session_state.authenticated:
-        show_auth_screen()
-    else:
-        show_chat_interface()
+        if st.session_state.screen == "login":
+            show_login_screen()
+        elif st.session_state.screen == "register":
+            show_register_screen()
+        else:
+            show_chat_interface()
+
 
 if __name__ == "__main__":
     main()
