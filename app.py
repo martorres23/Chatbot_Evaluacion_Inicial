@@ -547,13 +547,13 @@ def main():
     #else:
     #    show_chat_interface()
 
-    if not st.session_state.authenticated:
+    if st.session_state.authenticated:
+        show_chat_interface()
+    else:
         if st.session_state.screen == "login":
             show_login_screen()
         elif st.session_state.screen == "register":
             show_register_screen()
-        else:
-            show_chat_interface()
 
 
 if __name__ == "__main__":
