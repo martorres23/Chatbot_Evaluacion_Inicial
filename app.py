@@ -46,7 +46,7 @@ genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 # Configuración de LLM
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.0-flash-lite",
-    temperature=0.7,
+    temperature=0.6,
     convert_system_message_to_human=False
 )
 
