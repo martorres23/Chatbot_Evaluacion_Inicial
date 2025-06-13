@@ -486,11 +486,13 @@ def show_chat_interface():
         if isinstance(message, HumanMessage):
             st.chat_message("user").write(message.content)
         elif isinstance(message, AIMessage):
-            st.chat_message("assistant").write(message.content)
+            if message.content and message.content.strip():
+                st.chat_message("assistant").write(message.content)
         elif isinstance(message, ToolMessage):
+            if message.content and message.content.strip():
             # Optionally display tool messages for debugging, but typically hidden
-            st.chat_message("assistant").write(f"Tool output: {message.content}")
-            pass
+                st.chat_message("assistant").write(f"Tool output: {message.content}")
+                pass
 
     # Entrada de texto del usuario
     user_input = st.chat_input("Escribe tu mensaje aquí...")
@@ -507,34 +509,26 @@ def show_chat_interface():
         else:
             result = queries_agent.invoke({"messages": st.session_state.agent_state["messages"]})
 
-        # Actualizar el estado completo (solo para paciente)
-        #if st.session_state.user_role == "paciente":
-         #   st.session_state.agent_state.update(result)
-
+        # Actualizar el estado completo
         st.session_state.agent_state.update(result)
 
         # Obtener la lista de mensajes
         messages = result.get("messages", [])
 
         # Filtrar solo los que son del tipo AIMessage
-        ai_messages = [msg for msg in messages if isinstance(msg, AIMessage)]
+        ai_messages = [msg for msg in messages if isinstance(msg, AIMessage) and msg.content and msg.content.strip()]
+
 
         # Verificar que haya al menos uno
         if ai_messages:
             last_msg = ai_messages[-1]  # Tomar el último
 
             # Guardar en historial
-            st.session_state.chat_history.append(last_msg)
+            #st.session_state.chat_history.append(last_msg)
 
             # Mostrarlo en pantalla
             st.chat_message("assistant").write(last_msg.content)
-
-
-        # Mostrar respuestas del agente
-        #for msg in result.get("messages", []):
-         #   if isinstance(msg, AIMessage):
-          #      st.chat_message("assistant").write(msg.content)
-
+#
 def main():
     """Función principal de la aplicación"""
     # Inicializar base de datos y estado
