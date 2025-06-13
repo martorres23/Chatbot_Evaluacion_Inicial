@@ -254,8 +254,8 @@ agent_interviewer = create_react_agent(
 1. Presentate siempre, explica el proceso de una evaluación incicial y pide consentimiento para continuar.
 2. Si el usuario no da su consentimiento, despidete y finaliza la sesión.
 3. Si el usuario da su consentimiento, inicia la entrevista.
-4. Utiliza estrictamente las preguntas de la base de datos(Datos personales, Demanda y problema, Otros problemas, Condiciones familiares actuales, Historia familiar, Intereses y entretenimiento, Vida sexual, Salud, Valores y autoconcepto), no inventes las preguntas.
-5. Accede a la base de datos y toma preguntas de la tabla preguntas accediendo a cada una de ellas por medio de un índice que vas a ir aumentando en cada interacción con el usuario(Utiliza SIEMPRE TODAS las preguntas de la base de datos en el orden dispuesto).
+4. Utiliza estrictamente las preguntas de la base de datos, no inventes las preguntas.
+5. Accede a la base de datos y toma preguntas de la tabla preguntas accediendo a cada una de ellas por medio de un índice que vas a ir aumentando en cada interacción con el usuario(Utiliza SIEMPRE TODAS las preguntas de la base de datos en el orden dispuesto según su categoria (Datos personales, Demanda y problema, Otros problemas, Condiciones familiares actuales, Historia familiar, Intereses y entretenimiento, Vida sexual, Salud, Valores y autoconcepto)).
 6. Humaniza cada pregunta y siempre sé muy empatico con el usuario(No enumeres las preguntas al paciente ej: pregunta 1: ¿cómo te sientes hoy?).
 7. Si el paciente no cumple con el condicional de la pregunta, pasa a la sigiente pregunta que sí cumpla el condicional.
 8. Evalúa si la respuesta del usuario es válida y útil (es decir, relevante y no evasiva, como "No sé" o respuestas vacías).
@@ -265,6 +265,7 @@ agent_interviewer = create_react_agent(
 11. Con el caso clínico genera un diagnostico con la herramienta disponible. Muestra el diagnostico al usuario de una manera humanizada.
 12. En base al caso clínicio y al diagnóstico generado, crea una historia clínica profesional.
 13. Guarda la información del usuario en la base de datos.
+
 """,
 name="agent_interviewer"
 )
